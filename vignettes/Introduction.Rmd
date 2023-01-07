@@ -1,0 +1,93 @@
+---
+title: "Introduction to {missy}"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# `missy`
+
+```{r setup, warning = FALSE, message = FALSE}
+library(missy)
+library(dplyr)
+library(gtsummary)
+library(mice)
+library(flextable)
+
+library(psych)
+library(tidyverse)
+```
+
+## `mice_df`
+
+```{r}
+data(nhanes)
+imp <- mice::mice(nhanes, m = 5, printFlag = FALSE)
+vs <- c("bmi", "chl", "age")
+nm <- c("BMI", "Cholesterol", "Age")
+title <- "Table 1: Descriptive statistics"
+mice_df(imp = imp,
+         vs = vs,
+         title = title,
+         nm = nm)
+```
+
+## `mice_cor`
+
+```{r}
+data(nhanes)
+imp <- mice::mice(nhanes, m = 5, printFlag = FALSE)
+vs <- c("bmi", "chl", "age", "hyp")
+title <- "Table 2: Correlation matrix"
+mice_cor(imp = imp,
+         vs = vs,
+         title = title)
+```
+
+## `mice_alpha`
+
+```{r}
+# https://stackoverflow.com/questions/70816175/how-do-i-calculate-cronbachs-alpha-on-multiply-imputed-data
+set.seed(123)
+
+# sample survey responses
+df <- data.frame(
+  Q1 = c(1,2,2,3,2,2,3,3,2,3,
+         1,2,2,3,2,2,3,3,2,3,
+         1,2,2,3,2,2,3,3,2,3),
+  Q2 = c(1,1,1,2,3,3,2,3,3,3,
+         1,1,1,2,3,3,2,3,3,3,
+         1,2,2,3,2,2,3,3,2,3),
+  Q3 = c(1,1,2,1,2,3,3,3,2,3,
+         1,1,2,1,2,3,3,3,2,3,
+         1,2,2,3,2,2,3,3,2,3)
+)
+
+create_missings <- function(data, prob) {
+  x <- replicate(ncol(data),rbinom(nrow(data), 1, prob))
+  for(k in 1:ncol(data)) {
+    data[, k] <- ifelse(x[, k] == 1, NA, data[,k])
+  }
+  data
+}
+
+df <- create_missings(df, prob = 0.2)
+imp <- mice(df, m = 10, maxit = 20, printFlag = FALSE)
+
+mice_alpha(imp = imp,
+           varlist = c("Q1", "Q2", "Q3"),
+           bnum = 100,
+           title = "Cronbach's Alpha for df")
+```
+
