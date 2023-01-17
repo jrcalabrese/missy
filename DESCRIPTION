@@ -12,6 +12,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Imports: dplyr, tidyr, tibble, mice, miceadds, flextable, rrtable, gtsummary, methods, officer, ggplot2
+Imports: dplyr, tidyr, tibble, mice, miceadds, flextable, rrtable, gtsummary, methods, officer, tidyselect
 Suggests: rmarkdown, knitr
 VignetteBuilder: knitr

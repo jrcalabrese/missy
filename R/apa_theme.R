@@ -26,7 +26,7 @@ apa_theme <- function (ft)  {
     flextable::font(fontname = "Times New Roman", part = "all") %>%
     flextable::font(fontname = "Times New Roman", part = "footer") %>%
     flextable::fontsize(size = 12, part = "all") %>%
-    flextable::align(align = "left", part = "body") %>%
+    flextable::align(align = "center", part = "body") %>%
     flextable::align(align = "center", part = "header") %>%
     flextable::rotate(rotation = "lrtb", align = "top", part = "body") %>%
     flextable::border_remove() %>%

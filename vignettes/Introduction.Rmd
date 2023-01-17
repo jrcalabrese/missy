@@ -24,9 +24,6 @@ library(dplyr)
 library(gtsummary)
 library(mice)
 library(flextable)
-
-library(psych)
-library(tidyverse)
 ```
 
 ## `mice_df`
@@ -90,4 +87,3 @@ mice_alpha(imp = imp,
            bnum = 100,
            title = "Cronbach's Alpha for df")
 ```
-

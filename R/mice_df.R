@@ -15,10 +15,12 @@
 #' @importFrom tibble rownames_to_column
 #' @importFrom dplyr %>%
 #' @importFrom rrtable df2flextable
-#' @importFrom flextable add_header_lines
+#' @importFrom flextable add_header_lines colformat_double
 #' @export
 
 mice_df <- function(imp, vs, title, nm){
+
+  `# of Missing Values` <- NULL
 
   # complete data
   impdat <- mice::complete(imp, action = "long", include = FALSE)
@@ -29,11 +31,12 @@ mice_df <- function(imp, vs, title, nm){
   z <- lapply(as.list(vs), function(x){
     x = as.name(x)
     pool_mean <- with(impdat, by(impdat, .imp, function(y) c(
-      mean(y[[x]]),
-      sd(y[[x]]),
-      min(y[[x]]),
-      max(y[[x]]),
-      ( sd(y[[x]])/sqrt(length(y[[x]])) )
+      mean(y[[x]], na.rm = TRUE),
+      sd(y[[x]], na.rm = TRUE),
+      min(y[[x]], na.rm = TRUE),
+      max(y[[x]], na.rm = TRUE),
+      ( sd(y[[x]], na.rm = TRUE)/sqrt(length(y[[x]])) ),
+      sum(is.na(y[[x]]))
     )))
     Reduce("+", pool_mean)/length(pool_mean)
   }) %>%
@@ -45,10 +48,14 @@ mice_df <- function(imp, vs, title, nm){
   else
     colnames(z) <- nm
 
-    z <- z %>% `rownames<-`(c("Mean", "Standard Deviation", "Minimum",
-                   "Maximum", "Standard Error")) %>%
+    z <- z %>% `rownames<-`(c("Mean", "Standard Deviation",
+                              "Minimum", "Maximum",
+                              "Standard Error",
+                              "# of Missing Values"
+                              )) %>%
     t() %>% as.data.frame() %>%
-    tibble::rownames_to_column("Variable")
+    tibble::rownames_to_column("Variable") %>%
+    mutate(`# of Missing Values` = as.factor(`# of Missing Values`))
 
     if (missing(title))
       title <- "Descriptive Statistics"
@@ -63,6 +70,7 @@ mice_df <- function(imp, vs, title, nm){
       align_body = "left",
       NA2space = TRUE) %>%
     missy::apa_theme() %>%
+    colformat_double(j = c("# of Missing Values"), digits = 1) %>%
     flextable::add_header_lines(values = title)
 
   return(z)

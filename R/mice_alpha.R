@@ -21,6 +21,8 @@
 
 mice_alpha <- function(imp, varlist, bnum, title){
 
+    var <- sd <- quantile <- qt <- NULL
+
     Bx <- bnum
 
   implong <- mice::complete(imp, action = "long")
