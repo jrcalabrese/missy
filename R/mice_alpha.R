@@ -12,6 +12,7 @@
 #'
 #' @importFrom mice complete as.mids pool.scalar
 #' @importFrom dplyr select %>% rename
+#' @importFrom tidyr drop_na
 #' @importFrom tibble rownames_to_column
 #' @importFrom tidyselect all_of
 #' @importFrom rrtable df2flextable
@@ -35,7 +36,7 @@ mice_alpha <- function(imp, varlist, bnum, title){
   imp <- makemids
 
   cronbach_fun <- function(list_compl_data, boot = TRUE, B = Bx, ci = FALSE) {
-    #list_compl_data <- drop_na(list_compl_data)
+    list_compl_data <- drop_na(list_compl_data) # angry noises
     n <- nrow(list_compl_data); p <- ncol(list_compl_data)
     total_variance <- var(rowSums(list_compl_data))
     item_variance <- sum(apply(list_compl_data, 2, sd)^2)
