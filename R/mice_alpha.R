@@ -21,18 +21,21 @@
 
 mice_alpha <- function(imp, varlist, bnum, title){
 
-    var <- sd <- quantile <- qt <- NULL
+  var <- sd <- quantile <- qt <- NULL
 
-    Bx <- bnum
+  Bx <- bnum
 
-  implong <- mice::complete(imp, action = "long")
+  implong <- mice::complete(imp, action = "long", include = FALSE) %>%
+    select(".imp", ".id", all_of(varlist))
 
   implong2 <- mice::complete(imp, action = "long", include = TRUE) %>%
     select(".imp", ".id", all_of(varlist))
+
   makemids <- as.mids(implong2, .imp = ".imp", .id = ".id")
   imp <- makemids
 
   cronbach_fun <- function(list_compl_data, boot = TRUE, B = Bx, ci = FALSE) {
+    #list_compl_data <- drop_na(list_compl_data)
     n <- nrow(list_compl_data); p <- ncol(list_compl_data)
     total_variance <- var(rowSums(list_compl_data))
     item_variance <- sum(apply(list_compl_data, 2, sd)^2)
@@ -97,7 +100,7 @@ mice_alpha <- function(imp, varlist, bnum, title){
       align_header = "left",
       NA2space = TRUE,
       digits = 3
-      ) %>%
+    ) %>%
     apa_theme() %>%
     flextable::compose(i = 1, j = 1, part = "header",
                        flextable::as_paragraph(flextable::as_chunk(" "))) %>%
