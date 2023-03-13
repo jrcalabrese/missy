@@ -62,7 +62,7 @@ mice_alpha <- function(imp, varlist, bnum, title){
   boot_alpha <- rep(list(NA), m)
   for (i in seq_len(m)) {
     set.seed(i) # fix random number generator
-    sub <- implong[implong$.imp == i, -c(1,2)]
+    sub <- implong[implong$.imp == i, -c(1,2)] %>% drop_na()
     boot_alpha[[i]] <- cronbach_fun(sub)
   }
 
