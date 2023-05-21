@@ -10,7 +10,7 @@
 #' @export
 tidy_lavaan_mi <- function(x) {
 
-  Beta <- Estimate <- SE <- df <- est <- exo <- label <- lhs <- op <- p <- pvalue <- rhs <- rowname <- se <- term <- NULL
+  Beta <- Estimate <- SE <- est <- exo <- label <- lhs <- op <- p <- pvalue <- rhs <- rowname <- se <- term <- NULL
 
   y <-
     summary(x) %>%
@@ -27,7 +27,7 @@ tidy_lavaan_mi <- function(x) {
     ) %>%
     select(Estimate, op, everything(), -rowname, -lhs, -rhs) %>%
     as_tibble() %>%
-    select(-c(op, exo, label, df)) %>%
+    select(-c(op, exo, label, `df`)) %>%
     mutate(across(c(Beta, SE, `T`), round, 2)) %>%
     mutate(p = format(round(p, digits = 3), nsmall = 3))
 
