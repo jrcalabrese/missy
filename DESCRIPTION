@@ -1,5 +1,5 @@
 Package: missy
-Title: An R package for missing data and multiple imputation.
+Title: An R package for missing data and multiple imputation
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Julianna",
@@ -12,6 +12,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Imports: dplyr, tidyr, tibble, mice, miceadds, flextable, rrtable, gtsummary, methods, officer, tidyselect
+Imports: dplyr, tidyr, tibble, mice, miceadds, flextable, rrtable, gtsummary, methods, officer, tidyselect, ggplot2
 Suggests: rmarkdown, knitr
 VignetteBuilder: knitr
