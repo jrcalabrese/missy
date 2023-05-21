@@ -10,12 +10,13 @@
 #' @export
 tidy_lavaan_mi <- function(x) {
 
-  Beta <- Estimate <- SE <- est <- exo <- label <- lhs <- op <- p <- pvalue <- rhs <- rowname <- se <- term <- NULL
+  Beta <- Estimate <- SE <- est <- exo <- label <- lhs <- df <- op <- p <- pvalue <- rhs <- rowname <- se <- term <- NULL
 
   y <-
     summary(x) %>%
+    as.data.frame() %>%
     as_tibble() %>%
-    rownames_to_column() %>%
+    tibble::rownames_to_column() %>%
     mutate(term = paste(lhs, op, rhs)) %>%
     filter(!grepl("~~", term)) %>%
     rename(
