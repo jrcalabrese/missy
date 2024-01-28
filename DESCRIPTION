@@ -11,7 +11,7 @@ Description: A package for multiple imputation and missing data analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Imports: dplyr, tidyr, tibble, mice, miceadds, flextable, rrtable, gtsummary, methods, officer, tidyselect, ggplot2
-Suggests: rmarkdown, knitr
+Suggests: rmarkdown, knitr, semTools, lavaan
 VignetteBuilder: knitr

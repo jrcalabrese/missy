@@ -28,7 +28,7 @@ library(flextable)
 
 ## `mice_df`
 
-```{r}
+```{r mice_df}
 data(nhanes)
 imp <- mice::mice(nhanes, m = 5, printFlag = FALSE)
 vs <- c("bmi", "chl", "age")
@@ -42,7 +42,7 @@ mice_df(imp = imp,
 
 ## `mice_cor`
 
-```{r}
+```{r mice_cor}
 data(nhanes)
 imp <- mice::mice(nhanes, m = 5, printFlag = FALSE)
 vs <- c("bmi", "chl", "age", "hyp")
@@ -54,36 +54,38 @@ mice_cor(imp = imp,
 
 ## `mice_alpha`
 
-```{r}
-# https://stackoverflow.com/questions/70816175/how-do-i-calculate-cronbachs-alpha-on-multiply-imputed-data
-set.seed(123)
-
-# sample survey responses
-df <- data.frame(
-  Q1 = c(1,2,2,3,2,2,3,3,2,3,
-         1,2,2,3,2,2,3,3,2,3,
-         1,2,2,3,2,2,3,3,2,3),
-  Q2 = c(1,1,1,2,3,3,2,3,3,3,
-         1,1,1,2,3,3,2,3,3,3,
-         1,2,2,3,2,2,3,3,2,3),
-  Q3 = c(1,1,2,1,2,3,3,3,2,3,
-         1,1,2,1,2,3,3,3,2,3,
-         1,2,2,3,2,2,3,3,2,3)
-)
-
-create_missings <- function(data, prob) {
-  x <- replicate(ncol(data),rbinom(nrow(data), 1, prob))
-  for(k in 1:ncol(data)) {
-    data[, k] <- ifelse(x[, k] == 1, NA, data[,k])
-  }
-  data
-}
-
-df <- create_missings(df, prob = 0.2)
-imp <- mice(df, m = 10, maxit = 20, printFlag = FALSE)
-
+```{r mice_alpha}
+data(nhanes)
+imp <- mice::mice(nhanes, m = 5, printFlag = FALSE)
+vs <- c("bmi", "chl", "age", "hyp")
+title <- "Table 3: Cronbach's alpha for variables from `nhanes`."
 mice_alpha(imp = imp,
-           varlist = c("Q1", "Q2", "Q3"),
-           bnum = 100,
-           title = "Cronbach's Alpha for df")
+         varlist = vs,
+         bnum = 100,
+         title = title)
+```
+
+## `tidy_lavaan_mi`
+
+```
+# {r tidy_lavaan_mi}
+library(lavaan)
+library(semTools)
+library(mice)
+
+set.seed(1)
+n <- 100
+data <- data.frame(x = rnorm(n), 
+                   y = rnorm(n),
+                   a = rnorm(n),
+                   b = rnorm(n),
+                   c = rnorm(n),
+                   d = rnorm(n)
+                   )
+imp <- mice(data, m = 5, print = FALSE)
+model <- "x ~ a + b
+          y ~ c + d"
+x <- sem.mi(model = model, data = imp)
+
+tidy_lavaan_mi(x)
 ```

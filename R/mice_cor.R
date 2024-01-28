@@ -7,6 +7,7 @@
 #'
 #' @param imp A `mids` object.
 #' @param vs Character vector, variables from `imp`. E.g., `c("bmi", "chl")`.
+#' @param nm Character vector, preferred variable names. E.g., `c("BMI", "Cholesterol")`. Optional.
 #' @param title Character, title of your correlation matrix. Optional.
 #'
 #' @importFrom miceadds micombine.cor
@@ -16,14 +17,26 @@
 #' @importFrom rrtable df2flextable
 #' @importFrom flextable compose add_header_lines as_paragraph as_chunk
 #' @export
-mice_cor <- function(imp, vs, title) {
+mice_cor <- function(imp, vs, nm, title) {
 
   # https://nathaneastwood.github.io/2019/08/18/no-visible-binding-for-global-variable/
   p <- r <- value <- variable1 <- variable2 <- NULL
 
   # use micombine.cor
   res <- miceadds::micombine.cor(mi.res = imp, variables = vs) %>%
-    dplyr::select(c(variable1,variable2, r, p))
+    dplyr::select(c(variable1, variable2, r, p))
+
+  # Rename variables
+  if (missing(nm))
+    nm <- vs
+  else
+    nm <- nm
+
+  res <- res %>%
+    mutate(
+      variable1 = ifelse(variable1 %in% vs, nm[match(variable1, vs)], variable1),
+      variable2 = ifelse(variable2 %in% vs, nm[match(variable2, vs)], variable2)
+    )
 
   # round digits
   res <- res %>%
