@@ -2,6 +2,7 @@
 
 > An R package designed for missing data and multiple imputation.
 
+<<<<<<< HEAD
 ## Install package
 
 ``` r
@@ -53,3 +54,6 @@ mice_alpha(imp = imp,
          bnum = 100,
          title = title)
 ```
+=======
+Work in progress. Designed to accompany my candidacy project for Spring 2023.
+>>>>>>> 6f2d62c8e3c15a5917c83423aebe7cd92906ecb6
